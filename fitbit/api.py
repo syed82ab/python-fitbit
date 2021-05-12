@@ -249,7 +249,7 @@ class Fitbit(object):
         # This should handle data level errors, improper requests, and bad
         # serialization
         headers = kwargs.get('headers', {})
-        headers.update({'Accept-Language': self.system})
+        headers.update({'Accept-Language': 'METRIC'})
         kwargs['headers'] = headers
 
         method = kwargs.get('method', 'POST' if 'data' in kwargs else 'GET')
@@ -808,6 +808,28 @@ class Fitbit(object):
             day=date.day
         )
         return self.make_request(url)
+
+    def log_weight(self, weight, date):
+        """
+        https://dev.fitbit.com/build/reference/web-api/body/
+        """
+        data = {
+            'weight': weight,
+            'date': date.strftime("%Y-%m-%d")
+            }
+        url = "{0}/{1}/user/-/body/log/weight.json".format(*self._get_common_args())
+        return self.make_request(url,data=data, method="POST")
+    
+    def log_fat(self, fat, date):
+        """
+        https://dev.fitbit.com/build/reference/web-api/body/
+        """
+        data = {
+            'fat': fat,
+            'date': date.strftime("%Y-%m-%d")
+            }
+        url = "{0}/{1}/user/-/body/log/fat.json".format(*self._get_common_args())
+        return self.make_request(url,data=data, method="POST")
 
     def log_sleep(self, start_time, duration):
         """
