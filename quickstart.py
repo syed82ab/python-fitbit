@@ -1,5 +1,5 @@
 import fitbit
-import gather_keys_oauth2 as Oauth2
+#import gather_keys_oauth2 as Oauth2
 import datetime
 import token_access
 import sys
@@ -25,14 +25,12 @@ ACCESS_TOKEN, REFRESH_TOKEN = token_access.GetConfig()
 
 auth2_client = fitbit.Fitbit(CLIENT_ID, CLIENT_SECRET, oauth2=True, access_token=ACCESS_TOKEN, refresh_token=REFRESH_TOKEN)
 
-yesterday = str((datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y%m%d"))
-yesterday2 = str((datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d"))
 today = datetime.datetime.now()
 
 fit_weight = auth2_client.log_weight(weight,today)
 fit_fat = auth2_client.log_fat(fat,today)
 
 #fit_statsHR = auth2_client.intraday_time_series('activities/heart', base_date=yesterday2, detail_level='1min')
-prof = auth2_client.user_profile_get()
+#prof = auth2_client.user_profile_get()
 
 #token_access.WriteConfig(ACCESS_TOKEN,REFRESH_TOKEN)
