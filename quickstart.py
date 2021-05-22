@@ -21,15 +21,25 @@ CLIENT_SECRET = '7ed20900e40156827fda3b90c9538baf'
 #server.browser_authorize()
 #ACCESS_TOKEN = str(server.fitbit.client.session.token['access_token'])
 #REFRESH_TOKEN = str(server.fitbit.client.session.token['refresh_token'])
-ACCESS_TOKEN, REFRESH_TOKEN = token_access.GetConfig()
+ACCESS_TOKEN, REFRESH_TOKEN, Expires_at= token_access.GetConfig()
 
-auth2_client = fitbit.Fitbit(CLIENT_ID, CLIENT_SECRET, oauth2=True, access_token=ACCESS_TOKEN, refresh_token=REFRESH_TOKEN)
+auth2_client = fitbit.Fitbit(CLIENT_ID, CLIENT_SECRET, oauth2=True, access_token=ACCESS_TOKEN,
+                             refresh_token=REFRESH_TOKEN, expires_at = Expires_at)
 
 today = datetime.datetime.now()
+if Expires_at - datetime.datetime.timestamp(today) > 0:
+        try:
+                fit_weight = auth2_client.log_weight(weight,today)
+                fit_fat = auth2_client.log_fat(fat,today)
+        except HTTPUnauthorized:
+                1+1
 
-fit_weight = auth2_client.log_weight(weight,today)
-fit_fat = auth2_client.log_fat(fat,today)
-
+else:
+        ACCESS_TOKEN, REFRESH_TOKEN, Expires_at=token_access.GetNewAccessToken(auth2_client)
+        auth2_client = fitbit.Fitbit(CLIENT_ID, CLIENT_SECRET, oauth2=True, access_token=ACCESS_TOKEN,
+                             refresh_token=REFRESH_TOKEN, expires_at = Expires_at)
+        fit_weight = auth2_client.log_weight(weight,today)
+        fit_fat = auth2_client.log_fat(fat,today)
 #fit_statsHR = auth2_client.intraday_time_series('activities/heart', base_date=yesterday2, detail_level='1min')
 #prof = auth2_client.user_profile_get()
 

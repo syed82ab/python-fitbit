@@ -11,6 +11,7 @@ def GetConfig():
     #Read first two lines - first is the access token, second is the refresh token
     AccToken = FileObj.readline()
     RefToken = FileObj.readline()
+    Expires_at = float(FileObj.readline())
 
     #Close the file
     FileObj.close()
@@ -21,9 +22,9 @@ def GetConfig():
         RefToken = RefToken[:-1]
 
     #Return values
-    return AccToken, RefToken
+    return AccToken, RefToken, Expires_at
 
-def WriteConfig(AccToken,RefToken):
+def WriteConfig(AccToken,RefToken, Expires_at):
     print("Writing new token to the config file")
     print("Writing this: " + AccToken + " and " + RefToken)
 
@@ -34,6 +35,7 @@ def WriteConfig(AccToken,RefToken):
     FileObj = open(IniFile,'w')
     FileObj.write(AccToken + "\n")
     FileObj.write(RefToken + "\n")
+    FileObj.write(str(Expires_at) + "\n")
     FileObj.close()
 
 #Make a HTTP POST to get a new
@@ -46,8 +48,9 @@ def GetNewAccessToken(auth2_client):
             )
     AccToken = token['access_token'];
     RefToken = token['refresh_token'];
+    Expires_at = token['expires_at'];
    
     #Write the access token to the ini file
-    WriteConfig(AccToken, RefToken)
+    WriteConfig(AccToken, RefToken, Expires_at)
 
-    return AccToken, RefToken
+    return AccToken, RefToken, Expires_at
