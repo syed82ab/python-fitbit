@@ -1,6 +1,6 @@
 from requests.auth import HTTPBasicAuth
 
-IniFile = "tokens.txt"
+IniFile = "/home/pi/python/python-fitbit/tokens.txt"
 
 def GetConfig():
     print( "Reading from the config file")
